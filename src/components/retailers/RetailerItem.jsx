@@ -78,7 +78,7 @@ export const RetailerItem = ({ retailer }) => {
 
   return (
     <div>
-      <h2>{retailer["Business Name"]}</h2>
+      <h2>{retailer.name}</h2>
       <p>{retailer.Address}</p>
 
       <h3>Flowers Sold</h3>
@@ -94,16 +94,14 @@ export const RetailerItem = ({ retailer }) => {
       <h3>Distributors</h3>
       <ul>
         {distributors.map((distributor, index) =>
-          distributor ? (
-            <li key={index}>{distributor["Business Name"]}</li>
-          ) : null
+          distributor ? <li key={index}>{distributor.name}</li> : null
         )}
       </ul>
 
       <h3>Nurseries</h3>
       <ul>
         {nurseries.map((nursery, index) =>
-          nursery ? <li key={index}>{nursery["Business Name"]}</li> : null
+          nursery ? <li key={index}>{nursery.name}</li> : null
         )}
       </ul>
     </div>
