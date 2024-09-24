@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllDistributors } from "../../services/DistributorServices";
-import { Distributor } from "./Distributors";
+import { DistributorInfo } from "./DistributorInfo";
 import "./Distributor.css"
 
 export const DistributorList = () => {
@@ -8,18 +8,18 @@ export const DistributorList = () => {
 
     useEffect(
         () => {
-            getAllDistributors(setDistributors)
+            getAllDistributors().then(allDistArray => {
+                setDistributors(allDistArray)
+            })
         },
         []
     )
 
-    return <article className="distributor">
-        {
-            distributors.map(distributor => <Distributor key= {`distributor--${distributor.id}`}
-                id = {distributor.id}
-                name = {distributor.name}
-            />)
-        }
-    </article>
-
+    return (
+        <div className="allDistributors">
+            {distributors.map(allDistributors => {
+                return <DistributorInfo allDistributors={allDistributors} key={allDistributors.id}/>
+            })}
+        </div>
+    )
 }

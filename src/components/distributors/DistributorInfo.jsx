@@ -4,33 +4,36 @@ import { getAllDistributors, getDistributorArray, getDistributorFlowers, getDist
 import { getAllNurseries } from "../../services/NurseryServices";
 
 
-export const DistributorInfo = () => {
+export const DistributorInfo = ({allDistributors}) => {
     const [distributorFlowers, setDistributorFlowers] = useState([])
     const [distributor, setDistributors] = useState([])
-    const {distributorId} = useParams
+    const {distributorId} = useParams()
     const [currentDistributor, setCurrent] = useState({})
-    const [nurseries, setNurseries] = useState({})
-    const [retailer, setRetailer] = useState({})
+    const [nurseries, setNurseries] = useState([])
+    const [retailer, setRetailer] = useState([])
 
     const localUser = localStorage.getItem("local_user")
     const userObject = JSON.parse(localUser)
 
     useEffect(
         () => {
-            getAllDistributors(setDistributors)
-            getAllNurseries(setNurseries)
+            getAllDistributors().then(distributors => {
+                setDistributors(distributors)
+            })
+            getAllNurseries().then(allNurseriesArray => {
+                setNurseries(allNurseriesArray)
+            })
         },
         []
     )
 
-    useEffect(
-        () => {
-            getDistributorFlowers(distributorId, setDistributorFlowers)
-            getDistributorArray(distributorId, setCurrent)
-            getDistributorRetailers(distributorId, setRetailer)
-        },
-        [distributorId]
-    )
+    useEffect(() => {
+        if (distributorId) {
+          getDistributorFlowers(distributorId).then((data) => setDistributorFlowers(data));
+          getDistributorArray(distributorId).then((data) => setCurrent(data));
+          getDistributorRetailers(distributorId).then((data) => setRetailer(data));
+        }
+      }, [distributorId]);
 
     return (<div>
         <h2>{currentDistributor[0]?.distributor?.name} Distributor</h2>

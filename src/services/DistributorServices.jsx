@@ -2,9 +2,6 @@ export const getAllDistributorsExpanded = () => {
   return fetch(
     `http://localhost:8088/distributorNurseries?_expand=distributor&_expand=nurseryFlower`
   ).then((response) => response.json());
-  return fetch(`http://localhost:8088/distributors`).then((response) => {
-    return response.json();
-  });
 };
 
 export const getDistributorNurseries = () => {
@@ -24,11 +21,11 @@ export const getAllDistributors = () => {
   });
 };
 
-export const getDistributorFlowers = () => {
+export const getDistributorFlowers = (id) => {
   return fetch(`http://localhost:8088/distributorNurseries?_expand=nurseryFlower&distributorId=${id}`).then((response) => response.json())
 }
 
-export const getDistributorArray = () => {
+export const getDistributorArray = (id) => {
   return fetch(`http://localhost:8088/distributors`).then((response) => response.json())
 }
 
