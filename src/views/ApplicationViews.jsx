@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
 import { Welcome } from "../components/welcome/Welcome";
 import { NavBar } from "../components/nav/NavBar";
-import { Nurseries } from "../components/nurseries/nurseries";
+import { NurseryList } from "../components/nurseries/NurseryList";
 
 export const ApplicationViews = () => {
   const [currentUser, setCurrentUser] = useState({});
@@ -26,7 +26,7 @@ export const ApplicationViews = () => {
         }
       >
         <Route index element={<Welcome currentUser={currentUser} />} />
-        <Route path="nurseries" element={<Nurseries />} />
+        <Route path="nurseries" element={<NurseryList />} />
       </Route>
     </Routes>
   );
