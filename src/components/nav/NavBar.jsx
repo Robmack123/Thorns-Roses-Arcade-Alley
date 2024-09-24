@@ -23,6 +23,11 @@ export const NavBar = () => {
             Retailers
           </Link>
         </li>
+        <li className="navbar-item">
+          <Link className="navbar-link" to="/mycart">
+            My Cart
+          </Link>
+        </li>
       </div>
       {localStorage.getItem("thorn_user") ? (
         <li className="navbar-item navbar-logout">
