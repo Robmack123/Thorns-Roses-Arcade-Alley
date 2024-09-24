@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { getAllFlowers } from "../../services/FlowerServices";
-import { getAllDistributors } from "../../services/DistributorServices";
+import { getAllDistributorsExpanded } from "../../services/DistributorServices";
 import "./Nursery.css";
 import backgroundImage from "../../assets/flower_collage.png";
 
@@ -20,7 +21,7 @@ export const Nursery = ({ nursery }) => {
   }, [nursery.id]);
 
   useEffect(() => {
-    getAllDistributors().then((distArray) => {
+    getAllDistributorsExpanded().then((distArray) => {
       const uniqueDistributorIds = new Set(); // Set to track unique distributor IDs
       const filteredDistributors = distArray.filter((distNursery) => {
         if (distNursery.nurseryFlower?.nurseryId === nursery.id) {
