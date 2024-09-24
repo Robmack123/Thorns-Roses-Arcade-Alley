@@ -1,0 +1,68 @@
+.nursery-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+  }
+  
+  .nursery {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px; 
+    padding: 20px;
+    background-color:#ccc;
+
+
+  }
+  
+  .nursery-flowers,
+  .nursery-distributor {
+    background-color: #ebe6e6;
+    color: black;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .nursery-info {
+    list-style: none;
+    padding: 5px 0;
+  }
+  
+  h1 {
+    font-size: 3.5rem;
+    text-decoration: underline;
+  }
+  
+  ul {
+    padding-left: 0;
+  }
+
+  .nursery-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .nursery-flowers,
+  .nursery-distributor {
+    display: flex;
+    flex-wrap: wrap; /* Wrap items if there's not enough space */
+    justify-content: space-evenly; /* Even spacing between items */
+  }
+  
+  .nursery-flowers ul,
+  .nursery-distributor ul {
+    list-style-type: none;
+    width: 150px; /* Set a fixed width for each flower/distributor */
+    height: 150px; /* Set a fixed height for each flower/distributor */
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: antiquewhite;
+  }
+  
