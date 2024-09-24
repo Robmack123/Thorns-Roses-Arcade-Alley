@@ -1,0 +1,73 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Container for distributor info */
+.distributor {
+    background-color: white;
+    border-radius: 8px;
+    margin: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Headers */
+h2, h4 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Distributor header section */
+.distributor__header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #5A5A5A;
+}
+
+/* Distributor details */
+.distributor div {
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #666;
+}
+
+/* Link styling */
+a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Price details */
+.distributor .price {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+/* Price markup percentage */
+.distributor .markup {
+    color: #e74c3c;
+}
+
+/* Retailer section */
+.retailer {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+/* Section titles */
+h4 {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+    margin-top: 20px;
+    color: #2c3e50;
+}
