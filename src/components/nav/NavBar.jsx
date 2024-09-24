@@ -1,26 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import "./NavBar.css";
 
 export const NavBar = () => {
   const navigate = useNavigate();
 
   return (
     <ul className="navbar">
-      <li className="navbar-item">
-        <Link className="navbar-link" to="/nurseries">
-          Nurseries
-        </Link>
-      </li>
-      <li>
-        <Link className="navbar-link" to="/distributors">
-          Distributors
-        </Link>
-      </li>
-      <li className="navbar-item">
-        <Link className="navbar-link" to="/retailers">
-          Retailers
-        </Link>
-      </li>
+      <div className="navbar-item-group">
+        <li className="navbar-item">
+          <Link className="navbar-link" to="/nurseries">
+            Nurseries
+          </Link>
+        </li>
+        <li className="navbar-item">
+          <Link className="navbar-link" to="/distributors">
+            Distributors
+          </Link>
+        </li>
+        <li className="navbar-item">
+          <Link className="navbar-link" to="/retailers">
+            Retailers
+          </Link>
+        </li>
+      </div>
       {localStorage.getItem("thorn_user") ? (
         <li className="navbar-item navbar-logout">
           <Link
