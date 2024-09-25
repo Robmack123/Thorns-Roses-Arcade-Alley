@@ -5,7 +5,7 @@ export const getAllFlowers = () => {
 };
 
 export const getFlowers = () => {
-  return fetch(`http://localhost:8088/flowers`).then(
-    (response) => response.json() // Correctly return the JSON response
+  return fetch(`http://localhost:8088/flowers`).then((response) =>
+    response.json()
   );
 };

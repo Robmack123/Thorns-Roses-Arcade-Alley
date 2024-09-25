@@ -2,8 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./NavBar.css";
 
-export const NavBar = () => {
+export const NavBar = ({ cart }) => {
   const navigate = useNavigate();
+  const totalItems = Object.values(cart).reduce(
+    (sum, quantity) => sum + quantity,
+    0
+  );
 
   return (
     <ul className="navbar">
@@ -25,7 +29,7 @@ export const NavBar = () => {
         </li>
         <li className="navbar-item">
           <Link className="navbar-link" to="/mycart">
-            My Cart
+            My Cart ({totalItems})
           </Link>
         </li>
       </div>
