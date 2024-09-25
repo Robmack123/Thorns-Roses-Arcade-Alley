@@ -23,13 +23,6 @@ ul{
   align-items: center;
 }
 
-.navbar-logout {
-  display: flex;
-  justify-content: flex-end;
-  position: relative;
-  left: 12rem;
-}
-
 .navbar-item {
   padding: 1rem 4rem 1.15rem;
   text-transform: uppercase;
