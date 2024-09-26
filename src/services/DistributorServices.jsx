@@ -1,4 +1,4 @@
-export const getAllDistributorsExpanded = () => {
+export const getAllDistributorNurseries = () => {
   return fetch(
     `http://localhost:8088/distributorNurseries?_expand=distributor&_expand=nurseryFlower`
   ).then((response) => response.json());

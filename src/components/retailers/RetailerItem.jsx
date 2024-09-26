@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import necessary routing components
 import {
   getAllNurseries,
   getNurseryFlowers,
@@ -7,103 +7,140 @@ import {
 import { getFlowers } from "../../services/FlowerServices";
 import {
   getAllDistributors,
-  getDistributorNurseries,
+  getAllDistributorNurseries,
 } from "../../services/DistributorServices";
+import "./Retailers.css";
+import { getRetailerFlowers } from "../../services/retailerServices";
 
-export const RetailerItem = ({ retailer }) => {
+export const RetailerItem = ({ retailer, addCartQuantity, cart = {} }) => {
   const [flowers, setFlowers] = useState([]);
   const [distributors, setDistributors] = useState([]);
   const [nurseries, setNurseries] = useState([]);
+  const navigate = useNavigate(); // Hook to programmatically navigate
 
   useEffect(() => {
-    // Fetch nursery flowers data
-    getNurseryFlowers().then((nurseryFlowerData) => {
-      // Fetch all flowers
-      getFlowers().then((allFlowers) => {
-        // Fetch flowers sold by the retailer
-        const retailerFlowers = nurseryFlowerData
-          .filter((nurseryFlower) => nurseryFlower.nurseryId === retailer.id)
-          .map((nurseryFlower) => {
+    // Fetch all data concurrently
+    Promise.all([
+      getNurseryFlowers(),
+      getFlowers(),
+      getAllDistributors(),
+      getAllNurseries(),
+      getAllDistributorNurseries(),
+      getRetailerFlowers(),
+    ]).then(
+      ([
+        nurseryFlowerData,
+        allFlowers,
+        allDistributors,
+        allNurseries,
+        distributorNurseryData,
+        retailerFlowerData,
+      ]) => {
+        const retailerFlowers = retailerFlowerData
+          .filter((retailerFlower) => retailerFlower.retailerId === retailer.id)
+          .map((retailerFlower) => {
+            const nurseryFlower = nurseryFlowerData.find(
+              (nf) => nf.id === retailerFlower.nurseryFlowerId
+            );
             const flower = allFlowers.find(
               (flower) => flower.id === nurseryFlower.flowerId
             );
-            return { ...flower, price: nurseryFlower.price };
+            return {
+              ...flower,
+              price: nurseryFlower.price,
+              nurseryId: nurseryFlower.nurseryId,
+            };
           });
+
         setFlowers(retailerFlowers);
-      });
 
-      // Fetch distributors and related nurseries
-      getAllDistributors().then((allDistributors) => {
-        getDistributorNurseries().then((distributorNurseryData) => {
-          const retailerDistributors = distributorNurseryData
-            .filter((relation) => relation.nurseryFlowerId === retailer.id)
-            .map((relation) => {
-              return allDistributors.find(
-                (distributor) => distributor.id === relation.distributorId
-              );
-            });
-          setDistributors(retailerDistributors);
-        });
-      });
+        const retailerDistributors = distributorNurseryData
+          .filter((relation) => relation.nurseryFlowerId === retailer.id)
+          .map((relation) => {
+            return allDistributors.find(
+              (distributor) => distributor.id === relation.distributorId
+            );
+          });
+        setDistributors(retailerDistributors);
 
-      // Fetch nurseries through distributors
-      getAllNurseries().then((allNurseries) => {
-        console.log("All Nurseries:", allNurseries);
-        getDistributorNurseries().then((distributorNurseryData) => {
-          console.log("Distributor-Nursery Relations:", distributorNurseryData);
+        const nurseryIds = retailerFlowers.map((flower) => flower.nurseryId);
 
-          // Get the nurseryFlowerIds associated with the retailer
-          const retailerFlowerIds = nurseryFlowerData
-            .filter((rel) => rel.nurseryId === retailer.id)
-            .map((rel) => rel.id); // Assuming you need the nurseryFlowerId
-
-          // Get the corresponding nursery IDs from nurseryFlowers
-          const nurseryIds = nurseryFlowerData
-            .filter((nurseryFlower) =>
-              retailerFlowerIds.includes(nurseryFlower.id)
-            )
-            .map((nurseryFlower) => nurseryFlower.nurseryId); // Get nurseryId from nurseryFlower
-
-          //Fetch the nurseries using the nursery IDs
-          const retailerNurseries = allNurseries.filter((nursery) =>
-            nurseryIds.includes(nursery.id)
-          );
-
-          console.log("Retailer Nurseries:", retailerNurseries); // Check if nurseries are correctly mapped
-          setNurseries(retailerNurseries); // Set the state with the nurseries found
-        });
-      });
-    });
+        const retailerNurseries = allNurseries.filter((nursery) =>
+          nurseryIds.includes(nursery.id)
+        );
+        setNurseries(retailerNurseries);
+      }
+    );
   }, [retailer]);
 
+  const handleViewCart = () => {
+    navigate("/mycart");
+  };
+
   return (
-    <div>
-      <h2>{retailer.name}</h2>
-      <p>{retailer.Address}</p>
+    <div className="retailer-container">
+      <div className="retailer">
+        <header>
+          <h1>{retailer.name}</h1>
+          <p>{retailer.Address}</p>
+        </header>
 
-      <h3>Flowers Sold</h3>
-      <ul>
-        {flowers.map((flower, index) => (
-          <li key={index}>
-            {flower.Color} {flower.Species} - ${(flower.price * 1.1).toFixed(2)}{" "}
-            (with markup)
-          </li>
-        ))}
-      </ul>
+        <div className="retailer-flowers">
+          <h3>Flowers Sold</h3>
+          {flowers.length > 0 ? (
+            flowers.map((flower) => (
+              <ul key={flower?.id}>
+                <li className="retailer-info">
+                  {flower?.color} {flower?.species}
+                </li>
+                <li className="retailer-info">
+                  Price: ${(flower?.price * 1.1).toFixed(2)} (with markup)
+                </li>
+                <li>
+                  <input
+                    type="number"
+                    min={0}
+                    defaultValue={cart[flower?.id] || 0}
+                    onChange={(event) =>
+                      addCartQuantity(flower?.id, Number(event.target.value))
+                    }
+                  />
+                </li>
+              </ul>
+            ))
+          ) : (
+            <p>No flowers available for this retailer.</p>
+          )}
+        </div>
 
-      <h3>Distributors</h3>
-      <ul>
-        {distributors.map((distributor, index) =>
-          distributor ? <li key={index}>{distributor.name}</li> : null
-        )}
-      </ul>
+        <div className="retailer-distributors">
+          <h3>Distributors</h3>
+          {distributors.length > 0 ? (
+            distributors.map((distributor, index) => (
+              <ul key={index}>
+                <li className="retailer-info">{distributor?.name}</li>
+              </ul>
+            ))
+          ) : (
+            <p>No distributors available for this retailer.</p>
+          )}
+        </div>
 
-      <h3>Nurseries</h3>
-      <ul>
-        {nurseries.map((nursery, index) =>
-          nursery ? <li key={index}>{nursery.name}</li> : null
-        )}
-      </ul>
+        <div className="retailer-nurseries">
+          <h3>Nurseries</h3>
+          {nurseries.length > 0 ? (
+            nurseries.map((nursery, index) => (
+              <ul key={index}>
+                <li className="retailer-info">{nursery?.name}</li>
+              </ul>
+            ))
+          ) : (
+            <p>No nurseries available for this retailer.</p>
+          )}
+        </div>
+
+        <button onClick={handleViewCart}>View Cart</button>
+      </div>
     </div>
   );
 };
