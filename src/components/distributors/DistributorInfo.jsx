@@ -1,58 +1,69 @@
-import { useEffect, useState } from "react";
-import {Link, useParams} from "react-router-dom"
-import { getAllDistributors, getDistributorArray, getDistributorFlowers, getDistributorRetailers } from "../../services/DistributorServices";
-import { getAllNurseries } from "../../services/NurseryServices";
+import React, { useEffect, useState } from "react";
+import { getAllDistributors, getDistributorFlowers, getDistributorRetailers } from "../../services/DistributorServices";
 
+export const DistributorView = () => {
+  const [distributors, setDistributors] = useState([]);
+  const [distributorFlowers, setDistributorFlowers] = useState([]);
+  const [retailers, setRetailers] = useState([]);
 
-export const DistributorInfo = ({allDistributors}) => {
-    const [distributorFlowers, setDistributorFlowers] = useState([])
-    const [distributor, setDistributors] = useState([])
-    const {distributorId} = useParams()
-    const [currentDistributor, setCurrent] = useState({})
-    const [nurseries, setNurseries] = useState([])
-    const [retailer, setRetailer] = useState([])
+  useEffect(() => {
+    // Fetch all distributors
+    getAllDistributors().then((data) => setDistributors(data));
+  }, []);
 
-    const localUser = localStorage.getItem("local_user")
-    const userObject = JSON.parse(localUser)
+  const handleDistributorSelect = (distributorId) => {
+    getDistributorFlowers(distributorId).then((data) => setDistributorFlowers(data));
+    getDistributorRetailers(distributorId).then((data) => setRetailers(data)); // Only fetch retailers for that distributor
+  };
+  
 
-    useEffect(
-        () => {
-            getAllDistributors().then(distributors => {
-                setDistributors(distributors)
-            })
-            getAllNurseries().then(allNurseriesArray => {
-                setNurseries(allNurseriesArray)
-            })
-        },
-        []
-    )
+  return (
+    <div className="container">
+    <h1>Distributors</h1>
+    <ul>
+      {distributors.map((distributor) => (
+        <li key={distributor.id} onClick={() => handleDistributorSelect(distributor.id)}>
+          {distributor.name}
+        </li>
+      ))}
+    </ul>
+  
+    {distributorFlowers.length > 0 && (
+      <>
+        <h2>Flowers</h2>
+        <ul>
+  {distributorFlowers.map((flower) => {
+    // Find the matching distributor for the current flower
+    const distributor = distributors.find(d => d.id === flower.distributorId);
 
-    useEffect(() => {
-        if (distributorId) {
-          getDistributorFlowers(distributorId).then((data) => setDistributorFlowers(data));
-          getDistributorArray(distributorId).then((data) => setCurrent(data));
-          getDistributorRetailers(distributorId).then((data) => setRetailer(data));
-        }
-      }, [distributorId]);
+    // Safely access the PriceMarkup (use 0 if no distributor is found)
+    const priceMarkup = distributor ? distributor["Price Markup"] : 0;
 
-    return (<div>
-        <h2>{currentDistributor[0]?.distributor?.name} Distributor</h2>
-        <h4>Flowers</h4>
-        { distributorFlowers.map(distributorFlower => {
-             let foundNursery = nurseries.find(nursery => distributorFlower?.nurseryFlower?.nurseryId === nursery.id)
-             return (
-             <section className="distributor">
-                 <header className="distributor__header" key={distributorId}>{distributorFlower?.nurseryFlower?.flower?.species} from <Link to={`/nurseries/${foundNursery.id}`}>{foundNursery.name}</Link></header>
-                 <div>Color: {distributorFlower?.nurseryFlower?.flower?.color}</div>
-                 <div>Price: {((distributorFlower?.nurseryFlower?.price) * (currentDistributor[0]?.distributor?.priceMarkup)).toLocaleString('en-US', {style:'currency', currency:'USD'})}</div>
-                 <div>Price Markup: {(parseFloat(currentDistributor[0]?.distributor?.priceMarkup - 1).toFixed(2)) * 100}%</div>
-             </section>)
-        })}
-        <h4>Retailers</h4>
-        <section className="distributor">
-                <header className="distributor__header"><Link to={`/retailers/${retailer[0]?.id}`}>{retailer[0]?.name}</Link></header>
-                <div>Address: {retailer[0]?.address}</div>
-            </section>
-        </div>
-    )
-}
+    return (
+      <li key={flower.id}>
+        {flower.flower.species} ({flower.flower.color}) - Price: $
+        {(flower.nurseryFlower.price * (1 + priceMarkup)).toFixed(2)}
+      </li>
+    );
+  })}
+</ul>
+
+      </>
+    )}
+  
+    {retailers.length > 0 && (
+      <>
+        <h2>Retailers</h2>
+        <ul>
+          {retailers.map((retailer) => (
+            <li key={retailer.id} className="retailer">
+              {retailer.name} - {retailer.Address}
+            </li>
+          ))}
+        </ul>
+      </>
+    )}
+  </div>
+  
+  );
+};

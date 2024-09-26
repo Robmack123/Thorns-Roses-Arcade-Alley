@@ -4,6 +4,7 @@ import { Welcome } from "../components/welcome/Welcome";
 import { NavBar } from "../components/nav/NavBar";
 import { NurseryList } from "../components/nurseries/NurseryList";
 import { RetailerList } from "../components/retailers/RetailerList";
+import { DistributorList } from "../components/distributors/DistributorsList";
 
 export const ApplicationViews = () => {
   const [currentUser, setCurrentUser] = useState({});
