@@ -7,6 +7,7 @@ import { RetailerList } from "../components/retailers/RetailerList";
 import { MyCart } from "../components/mycart/MyCart";
 import { getAllFlowers } from "../services/FlowerServices";
 import { DistributorList } from "../components/distributors/DistributorsList";
+import { DistributorView } from "../components/distributors/DistributorInfo";
 
 export const ApplicationViews = () => {
   const [cart, setCart] = useState({});
@@ -67,8 +68,8 @@ export const ApplicationViews = () => {
             path="/mycart"
             element={<MyCart cart={cart} setCart={setCart} flowers={flowers} />}
           />
-          <Route path="distributors" element={<DistributorList/>}/>
-      </Route>
+          <Route path="distributors" element={<DistributorView />} />
+        </Route>
       </Routes>
     </>
   );
