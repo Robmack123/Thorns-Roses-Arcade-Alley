@@ -4,6 +4,8 @@ import "./NavBar.css";
 
 export const NavBar = ({ cart }) => {
   const navigate = useNavigate();
+  const currentUser = JSON.parse(localStorage.getItem("thorn_user")); // Get the current user
+
   const totalItems = Object.values(cart).reduce(
     (sum, quantity) => sum + quantity,
     0
@@ -27,20 +29,22 @@ export const NavBar = ({ cart }) => {
             Retailers
           </Link>
         </li>
-        <li className="navbar-item">
-          <Link className="navbar-link" to="/mycart">
-            My Cart ({totalItems})
-          </Link>
-        </li>
+        {currentUser ? (
+          <li className="navbar-item">
+            <Link className="navbar-link" to="/mycart">
+              My Cart ({totalItems})
+            </Link>
+          </li>
+        ) : null}
       </div>
-      {localStorage.getItem("thorn_user") ? (
+      {currentUser ? (
         <li className="navbar-item navbar-logout">
           <Link
             className="navbar-link"
             to=""
             onClick={() => {
               localStorage.removeItem("thorn_user");
-              navigate("/login", { replace: true }); // Change to the correct login route
+              navigate("/login", { replace: true }); // Navigate immediately
             }}
           >
             Logout
