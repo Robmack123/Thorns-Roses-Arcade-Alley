@@ -6,6 +6,7 @@ import { NurseryList } from "../components/nurseries/NurseryList";
 import { RetailerList } from "../components/retailers/RetailerList";
 import { MyCart } from "../components/mycart/MyCart";
 import { getAllFlowers } from "../services/FlowerServices";
+import { DistributorList } from "../components/distributors/DistributorsList";
 
 export const ApplicationViews = () => {
   const [cart, setCart] = useState(() => {
@@ -55,7 +56,8 @@ export const ApplicationViews = () => {
             path="/mycart"
             element={<MyCart cart={cart} flowers={flowers} />}
           />
-        </Route>
+          <Route path="distributors" element={<DistributorList/>}/>
+      </Route>
       </Routes>
     </>
   );

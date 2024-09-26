@@ -1,28 +1,11 @@
-/* import { useEffect, useState } from "react";
-import { getAllDistributors } from "../../services/DistributorServices";
-import { DistributorInfo } from "./Distributor";
-import "./Distributors.css";
+import React from "react";
+import { DistributorView } from "./DistributorInfo"; // Import the DistributorView component
+import "./Distributor.css";
 
-export const DistributorsList = () => {
-  const [distributors, setDistributors] = useState([]);
-
-  useEffect(() => {
-    getAllDistributors().then((allDistArray) => {
-      setDistributors(allDistArray);
-    });
-  }, []);
-
-  return (
-    <div className="allDistributors">
-      {distributors.map((allDistributors) => {
-        return (
-          <DistributorInfo
-            allDistributors={allDistributors}
-            key={allDistributors.id}
-          />
-        );
-      })}
-    </div>
-  );
+export const DistributorList = () => {
+    return (
+        <div className="allDistributors">
+            <DistributorView /> {/* Replace DistributorInfo with DistributorView */}
+        </div>
+    );
 };
- */
